@@ -7,20 +7,33 @@ import 'package:re_state_action/src/typedefs/re_types.dart';
 import 'package:re_state_action/src/utils/re_subscription_holder.dart';
 import 'package:rxdart/rxdart.dart';
 
+/// A mixin that provides the functionality to listen to the state changes.
+/// It also provides a method to emit state.
 mixin ReStateMixin<State> on ReSubscriptionHolder {
+  /// A [BehaviorSubject] that emits the state. It is used to listen to the
+  /// state.
   @protected
   late final BehaviorSubject<State> stateNotifier;
 
+  /// The current state.
   State get state => stateNotifier.value;
+
+  /// A stream of state.
   Stream<State> get stateStream => stateNotifier.stream;
   final Map<ReStateCallback<State>, StreamSubscription<State>>
       _stateSubscriptions = {};
 
+  /// Emits the given [state].
   @protected
   void emitState(State state) {
     stateNotifier.add(state);
   }
 
+  /// Listens to the state.
+  /// [listener] is called whenever a [State] is emitted.
+  /// [onError] is called whenever an error occurs.
+  /// [onDone] is called when the stream is closed.
+  /// [cancelOnError] is used to cancel the subscription when an error occurs.
   void listenState(
     ReStateCallback<State> listener, {
     Function? onError,
@@ -39,6 +52,8 @@ mixin ReStateMixin<State> on ReSubscriptionHolder {
     _stateSubscriptions[listener] = subscription;
   }
 
+  /// Removes the [listener] from the state stream.
+  /// If the [listener] is not present in the state stream, then
   void removeStateListener(ReStateCallback<State> listener) {
     final subscription = _stateSubscriptions.remove(listener);
     if (subscription != null) {
@@ -46,6 +61,8 @@ mixin ReStateMixin<State> on ReSubscriptionHolder {
     }
   }
 
+  /// Closes the state notifier.
+  /// It also cancels all the subscriptions.
   @protected
   @mustCallSuper
   void closeState() {
