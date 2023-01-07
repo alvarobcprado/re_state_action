@@ -31,6 +31,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  
+  re_state_action:
+    git:
+      url: https://github.com/alvarobcprado/re_state_action
+      ref: 0.0.1
 
 
   # The following adds the Cupertino Icons font to your application.

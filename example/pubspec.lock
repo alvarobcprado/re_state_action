@@ -102,6 +102,22 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.2"
+  re_state_action:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "0.0.1"
+      resolved-ref: "75b56c0564899cc6c867455ade05beb83098ea70"
+      url: "https://github.com/alvarobcprado/re_state_action"
+    source: git
+    version: "0.0.1"
+  rxdart:
+    dependency: transitive
+    description:
+      name: rxdart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.27.7"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -158,3 +174,4 @@ packages:
     version: "2.1.2"
 sdks:
   dart: ">=2.18.2 <3.0.0"
+  flutter: ">=1.17.0"
