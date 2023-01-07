@@ -4,11 +4,11 @@ import 'package:re_state_action/src/typedefs/re_types.dart';
 
 class ReActionListener<A> extends StatefulWidget {
   const ReActionListener({
-    super.key,
+    Key? key,
     required this.reState,
     required this.onAction,
     required this.child,
-  });
+  }) : super(key: key);
 
   final ReActionCallback<A> onAction;
   final ReStateAction<dynamic, A> reState;

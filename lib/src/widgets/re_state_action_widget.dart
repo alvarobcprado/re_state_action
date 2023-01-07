@@ -4,12 +4,12 @@ import 'package:re_state_action/src/typedefs/re_types.dart';
 
 class ReStateActionWidget<S, A> extends StatefulWidget {
   const ReStateActionWidget({
-    super.key,
+    Key? key,
     required this.builder,
     required this.reState,
     required this.onAction,
     this.child,
-  });
+  }) : super(key: key);
 
   final ReStateBuilder<S> builder;
   final ReActionCallback<A> onAction;

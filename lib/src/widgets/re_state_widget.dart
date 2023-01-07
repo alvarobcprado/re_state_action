@@ -4,11 +4,11 @@ import 'package:re_state_action/src/typedefs/re_types.dart';
 
 class ReStateWidget<S> extends StatelessWidget {
   const ReStateWidget({
-    super.key,
+    Key? key,
     required this.builder,
     required this.reState,
     this.child,
-  });
+  }) : super(key: key);
 
   final ReStateBuilder<S> builder;
   final ReStateAction<S, Object> reState;
