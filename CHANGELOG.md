@@ -1,3 +1,6 @@
+## 0.0.4
+* Added unit and widget tests
+
 ## 0.0.3
 * Added initial documentation
 * Adjust ReStateWidget property to use ReState instead of ReStateAction
