@@ -11,6 +11,13 @@ For general information about developing packages, see the Dart guide for
 and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
+<div style="text-align: center; font-family: times new roman">
+<h1><span style="color:#7e71ac"><strong>Re</strong></span>:StateAction</h1>
+  <a href="https://pub.dev/packages/focus_on_it"><img src="https://img.shields.io/pub/v/re_state_action.svg" alt="Pub.dev Badge"></a>
+	<a href="https://github.com/alvarobcprado/re_state_action/actions"><img src="https://github.com/alvarobcprado/re_state_action/actions/workflows/test/badge.svg" alt="GitHub Build Badge"></a>
+	<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="MIT License Badge"></a>
+
+</div>
 
 ## About
 
