@@ -1,3 +1,6 @@
+## 0.0.5
+* Added readme documentation
+
 ## 0.0.4
 * Added unit and widget tests
 
