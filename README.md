@@ -19,7 +19,7 @@ And it also provides a simple way to manage the interaction between the UI and t
 
 ## Usage
 
-To create a simple StateAction class:
+To create a simple ReStateAction class:
 
 ```dart
 abstract class ShowSnackbarAction{}
@@ -101,7 +101,7 @@ ReStateActionWidget<int, ShowSnackbarAction>(
 ),
 ```
 
-If we eed only to listen to the actions, we can use the [ReActionListener] widget.
+If we need only to listen to the actions, we can use the [ReActionListener] widget.
 
 ```dart
 ReActionListener<ShowSnackbarAction>(
