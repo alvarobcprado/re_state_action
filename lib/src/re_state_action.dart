@@ -13,7 +13,7 @@ abstract class ReStateAction<State, Action> extends ReSubscriptionHolder
   /// Creates a [ReStateAction] with the given [initialState].
   ReStateAction(State initialState) {
     stateNotifier = BehaviorSubject<State>.seeded(initialState);
-    actionNotifier = BehaviorSubject<Action>();
+    actionNotifier = PublishSubject<Action>();
   }
 
   /// Disposes the [ReStateAction] and closes all the streams and subscriptions.
