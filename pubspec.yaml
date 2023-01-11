@@ -2,7 +2,7 @@ name: re_state_action
 description: A simple state management library for Flutter based on States and Actions managed by Streams with RxDart.
 repository: https://github.com/alvarobcprado/re_state_action
 issue_tracker: https://github.com/alvarobcprado/re_state_action/issues
-version: 0.0.5
+version: 0.0.6
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
