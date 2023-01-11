@@ -1,3 +1,6 @@
+## 0.0.6
+* Changed actionNotifier type to PublishSubject
+
 ## 0.0.5
 * Added readme documentation
 

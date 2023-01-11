@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 
 import '../helpers.dart';
@@ -22,7 +24,8 @@ void main() {
   test(
     'emit action',
     () async {
-      final reState = TestStateAction(0)..dispatchAction();
+      final reState = TestStateAction(0);
+      scheduleMicrotask(reState.dispatchAction);
       await expectLater(reState.actionStream, emits('action'));
     },
   );
@@ -31,23 +34,34 @@ void main() {
     'listen to state updates',
     () async {
       final reState = TestStateAction(0);
-      var lastState = 0;
-      var lastAction = 'test';
+      var listenValue = 'test';
 
       reState
         ..listenState((state) {
-          lastState = state;
+          listenValue = 'test $state';
         })
-        ..listenAction((action) {
-          lastAction = '$lastAction $action';
-        })
-        ..increment()
-        ..dispatchAction();
+        ..increment();
 
       await expectLater(reState.stateStream, emits(1));
+      expect(listenValue, 'test 1');
+    },
+  );
+
+  test(
+    'listen to action updates',
+    () async {
+      final reState = TestStateAction(0);
+      var listenValue = 'test';
+
+      reState.listenAction((action) {
+        listenValue = 'test $action';
+      });
+
+      scheduleMicrotask(reState.dispatchAction);
+
       await expectLater(reState.actionStream, emits('action'));
-      expect(lastState, 1);
-      expect(lastAction, 'test action');
+
+      expect(listenValue, 'test action');
     },
   );
 
@@ -55,26 +69,40 @@ void main() {
     'remove listener from state updates',
     () async {
       final reState = TestStateAction(0);
-      var lastState = 0;
-      var lastAction = 'test';
+      var listenValue = 'test';
 
-      void listenerToRemove(String action) {
-        lastAction = '$lastAction $action';
+      void listenerToRemove(int state) {
+        listenValue = 'test $state';
       }
 
       reState
-        ..listenState((state) {
-          lastState = state;
-        })
-        ..listenAction(listenerToRemove)
-        ..removeActionListener(listenerToRemove)
-        ..increment()
-        ..dispatchAction();
+        ..listenState(listenerToRemove)
+        ..removeStateListener(listenerToRemove)
+        ..increment();
 
       await expectLater(reState.stateStream, emits(1));
+      expect(listenValue, 'test');
+    },
+  );
+
+  test(
+    'remove listener from action updates',
+    () async {
+      final reState = TestStateAction(0);
+      var listenValue = 'test';
+
+      void listenerToRemove(String action) {
+        listenValue = 'test $action';
+      }
+
+      reState
+        ..listenAction(listenerToRemove)
+        ..removeActionListener(listenerToRemove);
+
+      scheduleMicrotask(reState.dispatchAction);
+
       await expectLater(reState.actionStream, emits('action'));
-      expect(lastState, 1);
-      expect(lastAction, 'test');
+      expect(listenValue, 'test');
     },
   );
 
