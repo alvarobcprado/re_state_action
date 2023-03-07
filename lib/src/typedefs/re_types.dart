@@ -16,3 +16,17 @@ typedef ReStateCallback<State> = void Function(
 typedef ReActionCallback<Action> = void Function(
   Action action,
 );
+
+/// A function that verifies if the should or not to call the [ReStateBuilder]
+/// based on the previous and current [State].
+typedef ReStateBuildCondition<State> = bool Function(
+  State previousState,
+  State currentState,
+);
+
+/// A function that verifies if the should or not to call the [ReActionCallback]
+/// based on the previous and current [Action].
+typedef ReActionBuildCondition<Action> = bool Function(
+  Action previousAction,
+  Action currentAction,
+);
