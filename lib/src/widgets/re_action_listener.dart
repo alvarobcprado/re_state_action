@@ -13,6 +13,7 @@ class ReActionListener<A> extends StatefulWidget {
     Key? key,
     required this.reState,
     required this.onAction,
+    this.listenWhen,
     required this.child,
   }) : super(key: key);
 
@@ -21,6 +22,10 @@ class ReActionListener<A> extends StatefulWidget {
 
   /// The [ReStateAction] that this widget subscribes to.
   final ReStateAction<dynamic, A> reState;
+
+  /// A function that verifies if the should or not to call the [onAction]
+  /// based on the previous and current [Action].
+  final ReActionListenerCondition<A>? listenWhen;
 
   /// The child widget that is not rebuilt when an action is dispatched.
   final Widget child;
@@ -31,17 +36,25 @@ class ReActionListener<A> extends StatefulWidget {
 
 class _ReActionListenerState<A> extends State<ReActionListener<A>> {
   ReStateAction<dynamic, A> get reState => widget.reState;
+  A? _previousAction;
 
   @override
   void initState() {
     super.initState();
-    reState.listenAction(widget.onAction);
+    reState.listenAction(_listenToActionChange);
   }
 
   @override
   void dispose() {
-    reState.removeActionListener(widget.onAction);
+    reState.removeActionListener(_listenToActionChange);
     super.dispose();
+  }
+
+  void _listenToActionChange(A action) {
+    if (widget.listenWhen?.call(_previousAction, action) ?? true) {
+      widget.onAction(action);
+    }
+    _previousAction = action;
   }
 
   @override

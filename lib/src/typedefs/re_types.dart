@@ -26,7 +26,7 @@ typedef ReStateBuildCondition<State> = bool Function(
 
 /// A function that verifies if the should or not to call the [ReActionCallback]
 /// based on the previous and current [Action].
-typedef ReActionBuildCondition<Action> = bool Function(
-  Action previousAction,
+typedef ReActionListenerCondition<Action> = bool Function(
+  Action? previousAction,
   Action currentAction,
 );
