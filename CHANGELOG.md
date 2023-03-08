@@ -1,3 +1,7 @@
+## 0.0.7
+* Added `ReStateBuildCondition` to allow for more granular control over when to rebuild widgets
+* Added `ReActionListenerCondition` to allow for more granular control over when to listen to actions
+
 ## 0.0.6
 * Changed actionNotifier type to PublishSubject
 
