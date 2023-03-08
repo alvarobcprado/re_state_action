@@ -14,10 +14,11 @@ void main() {
 
   setUp(() {
     reState = TestStateAction(0);
+    lastAction = 'Test';
   });
 
   testWidgets(
-    'Calls onAction when action is emitted',
+    'call onAction when action is emitted',
     (tester) async {
       final widget = MaterialApp(
         home: ReActionListener<String>(
@@ -28,6 +29,29 @@ void main() {
       );
 
       await tester.pumpWidget(widget);
+      reState.dispatchAction();
+      await tester.pumpAndSettle();
+      expect(lastAction, 'Test action');
+    },
+  );
+
+  testWidgets(
+    'not call onAction when action is emitted and listenWhen condition is'
+    ' false',
+    (tester) async {
+      final widget = MaterialApp(
+        home: ReActionListener<String>(
+          reState: reState,
+          onAction: onAction,
+          listenWhen: (lastAction, action) => lastAction != null,
+          child: const Text('Test'),
+        ),
+      );
+
+      await tester.pumpWidget(widget);
+      reState.dispatchAction();
+      await tester.pumpAndSettle();
+      expect(lastAction, 'Test');
       reState.dispatchAction();
       await tester.pumpAndSettle();
       expect(lastAction, 'Test action');
