@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:re_state_action/src/re_state_action.dart';
-import 'package:re_state_action/src/typedefs/re_types.dart';
+import 'package:re_state_action/re_state_action.dart';
 
 /// A widget that subscribes to the changes of state and actions of the given
 /// [reState] and rebuilds itself when the state changes.
@@ -23,6 +22,8 @@ class ReStateActionWidget<S, A> extends StatefulWidget {
     required this.builder,
     required this.reState,
     required this.onAction,
+    this.listenWhen,
+    this.buildWhen,
     this.child,
   }) : super(key: key);
 
@@ -35,6 +36,14 @@ class ReStateActionWidget<S, A> extends StatefulWidget {
   /// The [ReStateAction] that this widget subscribes to.
   final ReStateAction<S, A> reState;
 
+  /// A function that verifies if the should or not to call the [onAction]
+  /// based on the previous and current [Action].
+  final ReActionListenerCondition<A>? listenWhen;
+
+  /// A function that verifies if the should or not to rebuild the widget
+  /// based on the previous and current [State].
+  final ReStateBuildCondition<S>? buildWhen;
+
   /// The child widget that is passed to the [builder].
   final Widget? child;
 
@@ -45,30 +54,43 @@ class ReStateActionWidget<S, A> extends StatefulWidget {
 
 class _ReStateActionWidgetState<S, A> extends State<ReStateActionWidget<S, A>> {
   ReStateAction<S, A> get reState => widget.reState;
+  late S _currentState;
+  late bool _isFirstBuild;
 
   @override
   void initState() {
     super.initState();
-    reState.listenAction(widget.onAction);
+    _currentState = reState.state;
+    _isFirstBuild = true;
+    reState.listenState(_listenToStateChange);
   }
 
   @override
   void dispose() {
-    reState.removeActionListener(widget.onAction);
+    reState.removeStateListener(_listenToStateChange);
     super.dispose();
+  }
+
+  void _listenToStateChange(S state) {
+    if (_isFirstBuild) {
+      _isFirstBuild = false;
+      return;
+    }
+
+    if (widget.buildWhen?.call(_currentState, state) ?? true) {
+      setState(() {
+        _currentState = state;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<S>(
-      stream: reState.stateStream,
-      builder: (context, state) {
-        if (state.hasData) {
-          return widget.builder(context, state.data as S, widget.child);
-        } else {
-          return const SizedBox.shrink();
-        }
-      },
+    return ReActionListener(
+      reState: reState,
+      onAction: widget.onAction,
+      listenWhen: widget.listenWhen,
+      child: widget.builder(context, _currentState, widget.child),
     );
   }
 }
