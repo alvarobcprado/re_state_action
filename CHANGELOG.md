@@ -1,3 +1,6 @@
+## 0.0.8
+* Added `ReListenerModifier` to allow for more granular control over when to listen to actions or state changes
+
 ## 0.0.7
 * Added `ReStateBuildCondition` to allow for more granular control over when to rebuild widgets
 * Added `ReActionListenerCondition` to allow for more granular control over when to listen to actions
