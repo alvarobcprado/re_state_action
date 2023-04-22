@@ -71,9 +71,12 @@ class _MyHomePageState extends State<MyHomePage> {
             ReStateActionWidget(
               reState: _reCounterStateAction,
               onAction: _onCounterAction,
+              buildWhen: (previousState, currentState) {
+                return currentState < 15;
+              },
               builder: (context, state, child) => Text(
                 '$state',
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
             ),
           ],
@@ -94,11 +97,14 @@ class ReCounterStateAction extends ReStateAction<int, ReCounterAction> {
       (state) {
         if (state == 0) {
           return;
-        } else if (state % 3 == 0) {
-          emitAction(const ShowSnackRed());
         } else if (state % 2 == 0) {
           emitAction(const ShowSnackGreen());
+        } else {
+          emitAction(const ShowSnackRed());
         }
+      },
+      modifier: (listener) {
+        return listener.debounceTime(const Duration(milliseconds: 500));
       },
     );
   }
