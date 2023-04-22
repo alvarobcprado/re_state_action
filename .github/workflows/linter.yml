@@ -3,6 +3,8 @@ name: linter
 on:
   pull_request:
     branches: ['**']
+  push:
+    tags: ['**']
 
 jobs:
   analyze:
