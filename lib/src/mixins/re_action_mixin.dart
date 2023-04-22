@@ -1,4 +1,4 @@
-// ignore_for_file: cancel_subscriptions
+// ignore_for_file: cancel_subscriptions, lines_longer_than_80_chars
 
 import 'dart:async';
 
@@ -25,19 +25,28 @@ mixin ReActionMixin<Action> on ReSubscriptionHolder {
     actionNotifier.add(action);
   }
 
-  /// Listens to the actions.
+  /// Listens to the actions changes.
+  ///
   /// [listener] is called whenever an [Action] is emitted.
+  ///
+  /// [modifier] is used to modify the stream of actions before it is listened to.
+  ///
   /// [onError] is called whenever an error occurs.
+  ///
   /// [onDone] is called when the stream is closed.
+  ///
   /// [cancelOnError] is used to cancel the subscription when an error occurs.
   void listenAction(
     ReActionCallback<Action> listener, {
+    ReListenerModifier<Action>? modifier,
     Function? onError,
     void Function()? onDone,
     bool cancelOnError = false,
   }) {
+    final listenerModifier = modifier ?? (listener) => listener;
+
     final subscription = subscriptions.add(
-      actionNotifier.listen(
+      listenerModifier(actionStream).listen(
         listener,
         onError: onError,
         onDone: onDone,

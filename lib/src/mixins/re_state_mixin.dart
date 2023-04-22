@@ -29,19 +29,28 @@ mixin ReStateMixin<State> on ReSubscriptionHolder {
     stateNotifier.add(state);
   }
 
-  /// Listens to the state.
+  /// Listens to the state changes.
+  ///
   /// [listener] is called whenever a [State] is emitted.
+  ///
+  /// [modifier] is used to modify the stream of state before it is listened to.
+  ///
   /// [onError] is called whenever an error occurs.
+  ///
   /// [onDone] is called when the stream is closed.
+  ///
   /// [cancelOnError] is used to cancel the subscription when an error occurs.
   void listenState(
     ReStateCallback<State> listener, {
+    ReListenerModifier<State>? modifier,
     Function? onError,
     void Function()? onDone,
     bool cancelOnError = false,
   }) {
+    final listenerModifier = modifier ?? (listener) => listener;
+
     final subscription = subscriptions.add(
-      stateNotifier.listen(
+      listenerModifier(stateStream).listen(
         listener,
         onError: onError,
         onDone: onDone,

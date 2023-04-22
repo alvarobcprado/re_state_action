@@ -30,3 +30,8 @@ typedef ReActionListenerCondition<Action> = bool Function(
   Action? previousAction,
   Action currentAction,
 );
+
+/// A function that modifies the listener to be called when the [T] changes.
+typedef ReListenerModifier<T> = Stream<T> Function(
+  Stream<T> listener,
+);
