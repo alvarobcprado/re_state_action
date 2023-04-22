@@ -1,8 +1,9 @@
-name: Analyze linter
+name: linter
 
 on:
   pull_request:
     branches: ['**']
+    tags: ['*.*.*']
 
 jobs:
   analyze:
