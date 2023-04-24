@@ -4,6 +4,9 @@ import 'package:re_state_action/src/re_state.dart';
 
 /// A class that manages the state of the application and provides a stream of
 /// state changes.
+///
+/// It also provides a handler for events of type [Event] dispatched from the
+/// view using the [process] method.
 abstract class ReStateEvent<State, Event> extends ReState<State>
     with ReEventMixin<Event> {
   /// Creates a [ReStateEvent] with the given [initialState].

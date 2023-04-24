@@ -4,8 +4,10 @@ import 'package:re_state_action/src/mixins/re_event_mixin.dart';
 
 /// A class that manages the state of the application and provides a stream of
 /// state changes. It also provides a stream of actions that can be used to
-/// dispatch actions to the view. The actions can be used to trigger events
-/// like navigation, showing dialogs, etc.
+/// dispatch actions to the view.
+///
+/// It also provides a handler to process events of type [Event] dispatched from
+/// view using the [process] method.
 abstract class ReStateActionEvent<State, Action, Event>
     extends ReStateAction<State, Action> with ReEventMixin<Event> {
   /// Creates a [ReStateAction] with the given [initialState].
