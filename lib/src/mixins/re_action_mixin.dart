@@ -13,6 +13,7 @@ mixin ReActionMixin<Action> on ReSubscriptionHolder {
   late final PublishSubject<Action> _actionNotifier;
 
   /// Initializes the action notifier.
+  @protected
   void initAction() {
     _actionNotifier = PublishSubject<Action>();
   }

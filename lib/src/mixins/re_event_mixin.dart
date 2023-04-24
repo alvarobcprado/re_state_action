@@ -10,6 +10,7 @@ mixin ReEventMixin<Event> on ReSubscriptionHolder {
   late final PublishSubject<Event> _eventsNotifier;
 
   /// Initializes the events notifier.
+  @protected
   void initEvent() {
     _eventsNotifier = PublishSubject<Event>();
   }

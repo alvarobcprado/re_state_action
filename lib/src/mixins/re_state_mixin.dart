@@ -13,6 +13,7 @@ mixin ReStateMixin<State> on ReSubscriptionHolder {
   late final BehaviorSubject<State> _stateNotifier;
 
   /// Initializes the state notifier.
+  @protected
   void initState(State initialState) {
     _stateNotifier = BehaviorSubject<State>.seeded(initialState);
   }
