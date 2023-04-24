@@ -46,6 +46,17 @@ class TestStateActionEvent
   }
 }
 
+class WrongTestStateEvent extends ReStateEvent<int, CounterEvent> {
+  WrongTestStateEvent(int initialState) : super(initialState) {
+    on<IncrementEvent>((event) => _increment());
+    on<IncrementEvent>((event) => _increment());
+  }
+
+  void _increment() {
+    emitState(state + 1);
+  }
+}
+
 abstract class CounterEvent {}
 
 class IncrementEvent extends CounterEvent {}

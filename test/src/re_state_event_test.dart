@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:re_state_action/src/utils/exceptions.dart';
 
 import '../helpers.dart';
 
@@ -11,6 +12,25 @@ void main() {
         () {
           final reState = TestStateEvent(0);
           expect(reState.state, 0);
+        },
+      );
+
+      test(
+        'throws a ReDuplicateEventHandlerException',
+        () {
+          expect(
+            () => WrongTestStateEvent(0),
+            throwsA(isA<ReDuplicateEventHandlerException>()),
+          );
+
+          try {
+            WrongTestStateEvent(0);
+          } on ReDuplicateEventHandlerException catch (e) {
+            expect(
+              e.toString(),
+              ReDuplicateEventHandlerException(IncrementEvent).toString(),
+            );
+          }
         },
       );
 

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:re_state_action/re_state_action.dart';
+import 'package:re_state_action/src/utils/exceptions.dart';
 import 'package:re_state_action/src/utils/re_subscription_holder.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -36,7 +37,7 @@ mixin ReEventMixin<Event> on ReSubscriptionHolder {
   }) {
     final type = T;
     if (_eventsMap.containsKey(type)) {
-      throw Exception('Event $type already subscribed');
+      throw ReDuplicateEventHandlerException(type);
     }
     _eventsMap[type] = callback;
 
