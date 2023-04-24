@@ -17,6 +17,7 @@ abstract class ReStateActionEvent<State, Action, Event>
 
   /// Disposes the [ReStateAction] and closes all the streams and subscriptions.
   @mustCallSuper
+  @override
   void dispose() {
     closeEvent();
     super.dispose();
