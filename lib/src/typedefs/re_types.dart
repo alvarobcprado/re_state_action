@@ -35,3 +35,7 @@ typedef ReActionListenerCondition<Action> = bool Function(
 typedef ReListenerModifier<T> = Stream<T> Function(
   Stream<T> listener,
 );
+
+typedef ReEventCallback<Event> = void Function(
+  Event event,
+);
