@@ -3,12 +3,12 @@ import 'package:re_state_action/re_state_action.dart';
 import 'package:re_state_action/src/utils/re_subscription_holder.dart';
 import 'package:rxdart/rxdart.dart';
 
-mixin ReEventsMixin<Event> on ReSubscriptionHolder {
+mixin ReEventMixin<Event> on ReSubscriptionHolder {
   final Map<Type, Function> _eventsMap = {};
   late final PublishSubject<Event> _eventsNotifier;
 
   /// Initializes the events notifier.
-  void initEvents() {
+  void initEvent() {
     _eventsNotifier = PublishSubject<Event>();
   }
 
@@ -47,7 +47,7 @@ mixin ReEventsMixin<Event> on ReSubscriptionHolder {
 
   @protected
   @mustCallSuper
-  void closeEvents() {
+  void closeEvent() {
     _eventsNotifier.close();
   }
 }
