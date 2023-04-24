@@ -10,23 +10,25 @@ import 'package:rxdart/rxdart.dart';
 /// A mixin that provides the functionality to listen to the state changes.
 /// It also provides a method to emit state.
 mixin ReStateMixin<State> on ReSubscriptionHolder {
-  /// A [BehaviorSubject] that emits the state. It is used to listen to the
-  /// state.
-  @protected
-  late final BehaviorSubject<State> stateNotifier;
+  late final BehaviorSubject<State> _stateNotifier;
+
+  /// Initializes the state notifier.
+  void initState(State initialState) {
+    _stateNotifier = BehaviorSubject<State>.seeded(initialState);
+  }
 
   /// The current state.
-  State get state => stateNotifier.value;
+  State get state => _stateNotifier.value;
 
   /// A stream of state.
-  Stream<State> get stateStream => stateNotifier.stream;
+  Stream<State> get stateStream => _stateNotifier.stream;
   final Map<ReStateCallback<State>, StreamSubscription<State>>
       _stateSubscriptions = {};
 
   /// Emits the given [state].
   @protected
   void emitState(State state) {
-    stateNotifier.add(state);
+    _stateNotifier.add(state);
   }
 
   /// Listens to the state changes.
@@ -75,7 +77,7 @@ mixin ReStateMixin<State> on ReSubscriptionHolder {
   @protected
   @mustCallSuper
   void closeState() {
-    stateNotifier.close();
+    _stateNotifier.close();
     _stateSubscriptions.forEach(
       (key, value) {
         value.cancel();

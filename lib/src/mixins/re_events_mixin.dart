@@ -4,8 +4,13 @@ import 'package:re_state_action/src/utils/re_subscription_holder.dart';
 import 'package:rxdart/rxdart.dart';
 
 mixin ReEventsMixin<Event> on ReSubscriptionHolder {
-  final Map<Type, Function> _events = {};
-  final PublishSubject<Event> _eventsSubject = PublishSubject<Event>();
+  final Map<Type, Function> _eventsMap = {};
+  late final PublishSubject<Event> _eventsNotifier;
+
+  /// Initializes the events notifier.
+  void initEvents() {
+    _eventsNotifier = PublishSubject<Event>();
+  }
 
   @protected
   void on<T extends Event>(
@@ -16,12 +21,12 @@ mixin ReEventsMixin<Event> on ReSubscriptionHolder {
     bool cancelOnError = false,
   }) {
     final type = T;
-    if (_events.containsKey(type)) {
+    if (_eventsMap.containsKey(type)) {
       throw Exception('Event $type already subscribed');
     }
-    _events[type] = callback;
+    _eventsMap[type] = callback;
 
-    final stream = _eventsSubject.stream.whereType<T>();
+    final stream = _eventsNotifier.stream.whereType<T>();
     final listenerModifier = modifier ?? (stream) => stream;
 
     final subscription = subscriptions.add(
@@ -37,6 +42,12 @@ mixin ReEventsMixin<Event> on ReSubscriptionHolder {
   }
 
   void process(Event event) {
-    _eventsSubject.add(event);
+    _eventsNotifier.add(event);
+  }
+
+  @protected
+  @mustCallSuper
+  void closeEvents() {
+    _eventsNotifier.close();
   }
 }
