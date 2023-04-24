@@ -1,4 +1,7 @@
-# 0.0.9
+## 0.0.10
+* Improved error handling
+
+## 0.0.9
 * Added `ReStateEvent` and `ReStateActionEvent` to allow for more granular control over the events that are dispatched from the view
 
 ## 0.0.8

@@ -11,11 +11,14 @@ import 'package:rxdart/rxdart.dart';
 /// It also provides a method to emit actions.
 mixin ReActionMixin<Action> on ReSubscriptionHolder {
   late final PublishSubject<Action> _actionNotifier;
+  bool _isInitialized = false;
+  bool get _isClosed => _actionNotifier.isClosed;
 
   /// Initializes the action notifier.
   @protected
   void initAction() {
     _actionNotifier = PublishSubject<Action>();
+    _isInitialized = true;
   }
 
   /// A stream of actions.
@@ -26,6 +29,20 @@ mixin ReActionMixin<Action> on ReSubscriptionHolder {
   /// Emits the given [action].
   @protected
   void emitAction(Action action) {
+    if (!_isInitialized) {
+      throw StateError(
+        'emitAction() called before initAction(). '
+        'Make sure to call initAction() in the constructor of the class.',
+      );
+    }
+
+    if (_isClosed) {
+      throw StateError(
+        'emitAction() called after closeAction(). '
+        'Make sure to call closeAction() in the dispose() method of the class.',
+      );
+    }
+
     _actionNotifier.add(action);
   }
 
@@ -47,6 +64,20 @@ mixin ReActionMixin<Action> on ReSubscriptionHolder {
     void Function()? onDone,
     bool cancelOnError = false,
   }) {
+    if (!_isInitialized) {
+      throw StateError(
+        'listenAction() called before initAction(). '
+        'Make sure to call initAction() in the constructor of the class.',
+      );
+    }
+
+    if (_isClosed) {
+      throw StateError(
+        'listenAction() called after closeAction(). '
+        'Make sure to call closeAction() in the dispose() method of the class.',
+      );
+    }
+
     final listenerModifier = modifier ?? (listener) => listener;
 
     final subscription = subscriptions.add(
@@ -65,6 +96,13 @@ mixin ReActionMixin<Action> on ReSubscriptionHolder {
   /// If the [listener] is not present in the action stream, then
   /// it does nothing.
   void removeActionListener(ReActionCallback<Action> listener) {
+    if (!_isInitialized) {
+      throw StateError(
+        'removeActionListener() called before initAction(). '
+        'Make sure to call initAction() in the constructor of the class.',
+      );
+    }
+
     final subscription = _actionSubscriptions.remove(listener);
     if (subscription != null) {
       subscription.cancel();
