@@ -6,6 +6,8 @@ export 'package:rxdart/transformers.dart';
 
 export 'src/re_state.dart';
 export 'src/re_state_action.dart';
+export 'src/re_state_action_event.dart';
+export 'src/re_state_event.dart';
 export 'src/typedefs/re_types.dart';
 export 'src/widgets/re_action_listener.dart';
 export 'src/widgets/re_state_action_widget.dart';

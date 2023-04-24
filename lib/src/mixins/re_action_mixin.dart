@@ -10,19 +10,23 @@ import 'package:rxdart/rxdart.dart';
 /// A mixin that provides the functionality to listen to the action changes.
 /// It also provides a method to emit actions.
 mixin ReActionMixin<Action> on ReSubscriptionHolder {
-  /// A [PublishSubject] that emits the actions. It is used to listen to the
-  /// actions.
-  late final PublishSubject<Action> actionNotifier;
+  late final PublishSubject<Action> _actionNotifier;
+
+  /// Initializes the action notifier.
+  @protected
+  void initAction() {
+    _actionNotifier = PublishSubject<Action>();
+  }
 
   /// A stream of actions.
-  Stream<Action> get actionStream => actionNotifier.stream;
+  Stream<Action> get actionStream => _actionNotifier.stream;
   final Map<ReActionCallback<Action>, StreamSubscription<Action>>
       _actionSubscriptions = {};
 
   /// Emits the given [action].
   @protected
   void emitAction(Action action) {
-    actionNotifier.add(action);
+    _actionNotifier.add(action);
   }
 
   /// Listens to the actions changes.
@@ -72,7 +76,7 @@ mixin ReActionMixin<Action> on ReSubscriptionHolder {
   @protected
   @mustCallSuper
   void closeAction() {
-    actionNotifier.close();
+    _actionNotifier.close();
     _actionSubscriptions.forEach(
       (key, value) {
         value.cancel();

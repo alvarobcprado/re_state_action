@@ -1,3 +1,6 @@
+# 0.0.9
+* Added `ReStateEvent` and `ReStateActionEvent` to allow for more granular control over the events that are dispatched from the view
+
 ## 0.0.8
 * Added `ReListenerModifier` to allow for more granular control over when to listen to actions or state changes
 

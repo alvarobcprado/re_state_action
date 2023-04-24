@@ -35,3 +35,8 @@ typedef ReActionListenerCondition<Action> = bool Function(
 typedef ReListenerModifier<T> = Stream<T> Function(
   Stream<T> listener,
 );
+
+/// A function that is called when an [Event] is dispatched.
+typedef ReEventCallback<Event> = void Function(
+  Event event,
+);

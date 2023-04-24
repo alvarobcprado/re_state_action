@@ -6,61 +6,63 @@ import '../helpers.dart';
 
 void main() {
   group(
-    'ReStateAction',
+    'ReStateActionEvent',
     () {
       test(
         'initialize with initial state',
         () {
-          final reState = TestStateAction(0);
+          final reState = TestStateActionEvent(0);
           expect(reState.state, 0);
         },
       );
 
       test(
         'emit new state updates current state',
-        () {
-          final reState = TestStateAction(0)..increment();
-          expect(reState.state, 1);
+        () async {
+          final reState = TestStateActionEvent(0)..process(IncrementEvent());
+
+          expect(reState.stateStream, emitsInOrder([0, 1]));
         },
       );
 
       test(
         'emit action',
         () async {
-          final reState = TestStateAction(0);
-          scheduleMicrotask(reState.dispatchAction);
-          await expectLater(reState.actionStream, emits('action'));
+          final reState = TestStateActionEvent(0)
+            ..process(DispatchActionEvent());
+
+          expect(reState.actionStream, emits('action'));
         },
       );
 
       test(
         'listen to state updates',
         () async {
-          final reState = TestStateAction(0);
+          final reState = TestStateActionEvent(0);
           var listenValue = 'test';
 
           reState
             ..listenState((state) {
               listenValue = 'test $state';
             })
-            ..increment();
+            ..process(IncrementEvent());
 
-          await expectLater(reState.stateStream, emits(1));
-          expect(listenValue, 'test 1');
+          await expectLater(reState.stateStream, emitsInOrder([0, 1]));
+          await expectLater(listenValue, 'test 1');
         },
       );
 
       test(
         'listen to action updates',
         () async {
-          final reState = TestStateAction(0);
+          final reState = TestStateActionEvent(0);
           var listenValue = 'test';
 
-          reState.listenAction((action) {
-            listenValue = 'test $action';
-          });
-
-          scheduleMicrotask(reState.dispatchAction);
+          reState
+            ..listenAction((action) {
+              listenValue = 'test $action';
+            })
+            ..process(DispatchActionEvent());
 
           await expectLater(reState.actionStream, emits('action'));
 
@@ -71,7 +73,7 @@ void main() {
       test(
         'remove listener from state updates',
         () async {
-          final reState = TestStateAction(0);
+          final reState = TestStateActionEvent(0);
           var listenValue = 'test';
 
           void listenerToRemove(int state) {
@@ -81,9 +83,9 @@ void main() {
           reState
             ..listenState(listenerToRemove)
             ..removeStateListener(listenerToRemove)
-            ..increment();
+            ..process(IncrementEvent());
 
-          await expectLater(reState.stateStream, emits(1));
+          await expectLater(reState.stateStream, emitsInOrder([0, 1]));
           expect(listenValue, 'test');
         },
       );
@@ -112,7 +114,7 @@ void main() {
       test(
         'dispose closes state and action streams',
         () async {
-          final reState = TestStateAction(0)..dispose();
+          final reState = TestStateActionEvent(0)..dispose();
           await expectLater(reState.stateStream, emitsInOrder([0, emitsDone]));
           await expectLater(reState.actionStream, emitsInOrder([emitsDone]));
         },
