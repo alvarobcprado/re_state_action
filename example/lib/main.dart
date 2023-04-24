@@ -28,10 +28,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final ReCounterStateAction _reCounterStateAction = ReCounterStateAction();
+  final ReCounterStateActionEvent _reCounterStateActionEvent =
+      ReCounterStateActionEvent();
 
   void _incrementCounter() {
-    _reCounterStateAction.increment();
+    _reCounterStateActionEvent.process(IncrementCounter());
   }
 
   void _onCounterAction(ReCounterAction action) {
@@ -46,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _onResetCounter() {
-    _reCounterStateAction.reset();
+    _reCounterStateActionEvent.process(ResetCounter());
   }
 
   @override
@@ -69,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pushed the button this many times:',
             ),
             ReStateActionWidget(
-              reState: _reCounterStateAction,
+              reState: _reCounterStateActionEvent,
               onAction: _onCounterAction,
               buildWhen: (previousState, currentState) {
                 return currentState < 15;
@@ -91,8 +92,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class ReCounterStateAction extends ReStateAction<int, ReCounterAction> {
-  ReCounterStateAction() : super(0) {
+class ReCounterStateActionEvent
+    extends ReStateActionEvent<int, ReCounterAction, ReCounterEvent> {
+  ReCounterStateActionEvent() : super(0) {
+    on<IncrementCounter>(
+      (event) => _increment(),
+    );
+    on<ResetCounter>(
+      (event) => _reset(),
+      modifier: (eventFlow) => eventFlow.debounceTime(
+        const Duration(seconds: 1),
+      ),
+    );
+
     listenState(
       (state) {
         if (state == 0) {
@@ -103,17 +115,14 @@ class ReCounterStateAction extends ReStateAction<int, ReCounterAction> {
           emitAction(const ShowSnackRed());
         }
       },
-      modifier: (listener) {
-        return listener.debounceTime(const Duration(milliseconds: 500));
-      },
     );
   }
 
-  void increment() {
+  void _increment() {
     emitState(state + 1);
   }
 
-  void reset() {
+  void _reset() {
     emitState(0);
     emitAction(const ShowSnackBrown());
   }
@@ -139,3 +148,9 @@ class ShowSnackGreen extends ReCounterAction {
 class ShowSnackBrown extends ReCounterAction {
   const ShowSnackBrown() : super(Colors.brown, 'Brown - Reseting');
 }
+
+abstract class ReCounterEvent {}
+
+class ResetCounter extends ReCounterEvent {}
+
+class IncrementCounter extends ReCounterEvent {}
