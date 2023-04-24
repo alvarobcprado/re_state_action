@@ -11,11 +11,14 @@ import 'package:rxdart/rxdart.dart';
 /// It also provides a method to emit state.
 mixin ReStateMixin<State> on ReSubscriptionHolder {
   late final BehaviorSubject<State> _stateNotifier;
+  bool _isInitialized = false;
+  bool get _isClosed => _stateNotifier.isClosed;
 
   /// Initializes the state notifier.
   @protected
   void initState(State initialState) {
     _stateNotifier = BehaviorSubject<State>.seeded(initialState);
+    _isInitialized = true;
   }
 
   /// The current state.
@@ -29,6 +32,20 @@ mixin ReStateMixin<State> on ReSubscriptionHolder {
   /// Emits the given [state].
   @protected
   void emitState(State state) {
+    if (!_isInitialized) {
+      throw StateError(
+        'emitState() called before initState(). '
+        'Make sure to call initState() in the constructor of the class.',
+      );
+    }
+
+    if (_isClosed) {
+      throw StateError(
+        'emitState() called after closeState(). '
+        'Make sure to call closeState() in the dispose() method of the class.',
+      );
+    }
+
     _stateNotifier.add(state);
   }
 
@@ -50,6 +67,20 @@ mixin ReStateMixin<State> on ReSubscriptionHolder {
     void Function()? onDone,
     bool cancelOnError = false,
   }) {
+    if (!_isInitialized) {
+      throw StateError(
+        'listenState() called before initState(). '
+        'Make sure to call initState() in the constructor of the class.',
+      );
+    }
+
+    if (_isClosed) {
+      throw StateError(
+        'listenState() called after closeState(). '
+        'Make sure to call closeState() in the dispose() method of the class.',
+      );
+    }
+
     final listenerModifier = modifier ?? (listener) => listener;
 
     final subscription = subscriptions.add(
