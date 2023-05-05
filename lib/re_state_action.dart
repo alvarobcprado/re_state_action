@@ -2,8 +2,6 @@
 /// States and Actions way with the help of the RxDart library.
 library re_state_action;
 
-export 'package:rxdart/transformers.dart';
-
 export 'src/re_state.dart';
 export 'src/re_state_action.dart';
 export 'src/re_state_action_event.dart';
