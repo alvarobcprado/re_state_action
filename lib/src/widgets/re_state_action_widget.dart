@@ -12,7 +12,7 @@ import 'package:re_state_action/re_state_action.dart';
 /// [builder] is called.
 ///
 /// [builder] is not called when the state is null.
-class ReStateActionWidget<S, A> extends StatefulWidget {
+class ReStateActionWidget<S, A> extends StatelessWidget {
   /// Creates a [ReStateActionWidget] that subscribes to the changes of state
   /// and actions of the given [reState] and rebuilds itself when the state
   /// changes.
@@ -48,49 +48,17 @@ class ReStateActionWidget<S, A> extends StatefulWidget {
   final Widget? child;
 
   @override
-  State<ReStateActionWidget<S, A>> createState() =>
-      _ReStateActionWidgetState<S, A>();
-}
-
-class _ReStateActionWidgetState<S, A> extends State<ReStateActionWidget<S, A>> {
-  ReStateAction<S, A> get reState => widget.reState;
-  late S _currentState;
-  late bool _isFirstBuild;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentState = reState.state;
-    _isFirstBuild = true;
-    reState.listenState(_listenToStateChange);
-  }
-
-  @override
-  void dispose() {
-    reState.removeStateListener(_listenToStateChange);
-    super.dispose();
-  }
-
-  void _listenToStateChange(S state) {
-    if (_isFirstBuild) {
-      _isFirstBuild = false;
-      return;
-    }
-
-    if (widget.buildWhen?.call(_currentState, state) ?? true) {
-      setState(() {
-        _currentState = state;
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ReActionListener(
       reState: reState,
-      onAction: widget.onAction,
-      listenWhen: widget.listenWhen,
-      child: widget.builder(context, _currentState, widget.child),
+      onAction: onAction,
+      listenWhen: listenWhen,
+      child: ReStateWidget(
+        reState: reState,
+        buildWhen: buildWhen,
+        builder: builder,
+        child: child,
+      ),
     );
   }
 }
