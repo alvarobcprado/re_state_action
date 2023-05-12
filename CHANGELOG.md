@@ -1,3 +1,6 @@
+## 0.0.12
+* Refactored `ReStateActionWidget` to remove duplicated code with `ReStateWidget`
+
 ## 0.0.11
 * Created `ReListenerModifiers` library to hold all listener modifiers
 
