@@ -76,6 +76,22 @@ void main() {
           await expectLater(reState.stateStream, emitsInOrder([0, emitsDone]));
         },
       );
+
+      test(
+        'throw state error when emitState() is called after dispose()',
+        () async {
+          final reState = TestState(0)..dispose();
+          expect(reState.increment, throwsStateError);
+        },
+      );
+
+      test(
+        'throw state error when listenState() is called after dispose()',
+        () async {
+          final reState = TestState(0)..dispose();
+          expect(() => reState.listenState((state) {}), throwsStateError);
+        },
+      );
     },
   );
 }
