@@ -62,3 +62,5 @@ abstract class CounterEvent {}
 class IncrementEvent extends CounterEvent {}
 
 class DispatchActionEvent extends CounterEvent {}
+
+class NotRegisteredEvent extends CounterEvent {}

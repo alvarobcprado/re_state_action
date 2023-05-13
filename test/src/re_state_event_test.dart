@@ -15,11 +15,11 @@ void main() {
       );
 
       test(
-        'throws a StateError',
+        'throws a state error when call on<T> twice with same type T',
         () {
           expect(
             () => WrongTestStateEvent(0),
-            throwsA(isA<StateError>()),
+            throwsStateError,
           );
         },
       );
@@ -85,6 +85,32 @@ void main() {
         () async {
           final reState = TestStateEvent(0)..dispose();
           await expectLater(reState.stateStream, emitsInOrder([0, emitsDone]));
+        },
+      );
+
+      test(
+        'throw state error when process() is called after dispose()',
+        () async {
+          final reState = TestStateEvent(0)..dispose();
+          expect(() => reState.process(IncrementEvent()), throwsStateError);
+        },
+      );
+
+      test(
+        'throw state error when on<T>() is called after dispose()',
+        () async {
+          final reState = TestStateEvent(0)..dispose();
+          // ignore: invalid_use_of_protected_member
+          expect(() => reState.on((event) {}), throwsStateError);
+        },
+      );
+
+      test(
+        // ignore: lines_longer_than_80_chars
+        'throw state error when proccess() is called for a Event that is not registered',
+        () async {
+          final reState = TestStateEvent(0);
+          expect(() => reState.process(NotRegisteredEvent()), throwsStateError);
         },
       );
     },
