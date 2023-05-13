@@ -109,5 +109,6 @@ mixin ReEventMixin<Event> on ReSubscriptionHolder {
   @mustCallSuper
   void closeEvent() {
     _eventsNotifier.close();
+    _eventsMap.clear();
   }
 }
