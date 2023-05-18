@@ -3,6 +3,7 @@
   <a href="https://pub.dev/packages/re_state_action"><img src="https://img.shields.io/pub/v/re_state_action.svg" alt="Pub.dev Badge"></a>
 	<a href="https://github.com/alvarobcprado/re_state_action/actions"><img src="https://github.com/alvarobcprado/re_state_action/actions/workflows/test.yml/badge.svg" alt="GitHub Build Badge"></a>
 	<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="MIT License Badge"></a>
+  <a href="https://pub.dev/packages/very_good_analysis"><img src="https://img.shields.io/badge/style-very_good_analysis-B22C89.svg" alt="Very Good Analysis Style Badge"></a>
 
 </div>
 
