@@ -24,7 +24,7 @@ class ReActionListener<A> extends StatefulWidget {
   final ReStateAction<dynamic, A> reState;
 
   /// A function that verifies if the should or not to call the [onAction]
-  /// based on the previous and current [Action].
+  /// based on the previous and current [A].
   final ReActionListenerCondition<A>? listenWhen;
 
   /// The child widget that is not rebuilt when an action is dispatched.
