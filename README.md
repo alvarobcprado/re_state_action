@@ -9,8 +9,7 @@
 
 ## About
 
-This package is a wrapper of [RxDart] library. It provides a simple way to manage the state of your application with the help of streams.
-And it also provides a simple way to manage the interaction between the UI and the user (like dialogs, alerts, modals, etc.) in a reactive way and without overloading the state.
+This package acts as a wrapper for the popular [RxDart] library, simplifying state management through streams. It offers a straightforward solution to effectively handle application state and seamlessly manage interactions between the user interface (UI) and the user. By leveraging the package's reactive approach, you can efficiently handle UI components such as dialogs, alerts, modals, and more, all while avoiding unnecessary state overload.
 
 ## Usage
 
@@ -21,7 +20,7 @@ abstract class ShowSnackbarAction{}
 
 class ShowIsEvenValueSnackbarAction extends ShowSnackbarAction{}
 
-class CounterStateAction extends ReStateAction<int, String> {
+class CounterStateAction extends ReStateAction<int, ShowSnackbarAction> {
   CounterStateAction({int initialState = 0}) : super(initialState){
     // Here you can add the listeners to the state
     listenState((state){
@@ -36,7 +35,9 @@ class CounterStateAction extends ReStateAction<int, String> {
 }
 ```
 
-In the example above, we have created a simple [ReStateAction] class that manages the state of a counter. We have also added a listener to the state that will emit an action when the state is even.
+In this example, we utilize the package to create a `CounterStateAction` class, responsible for managing the state of a counter by extending the `ReStateAction` class.
+
+Within the class constructor, a listener is set up to monitor state changes. When the state becomes even, an action of type `ShowIsEvenValueSnackbarAction` is emitted using the `emitAction` method. This allows you to handle the event and display a snackbar or perform other actions as needed.
 
 When using to manage simple states, instead to use the [ReStateAction] class, we can use the [ReState] class. It is a simple class that manages the state of your application. It is useful when you don't need to manage the interaction between the UI and the user.
 
@@ -109,6 +110,60 @@ ReActionListener<ShowSnackbarAction>(
         ),
       );
     }
+  },
+  child: Text('Widget that will not be rebuilt'),
+),
+```
+
+## Dart 3.0
+
+The package is compatible with Dart 3.0 new features like sealed classes and pattern matching. To use it, you need to update your Flutter version to `3.10.0` or above and enable the Dart 3.0 features in your `pubspec.yaml` file.
+
+```yaml
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+```
+
+An usecase example:
+
+```dart
+sealed class ShowSnackbarAction{}
+
+class ShowIsEvenValueSnackbarAction extends ShowSnackbarAction{}
+
+class ShowIsOddValueSnackbarAction extends ShowSnackbarAction{}
+
+class CounterStateAction extends ReStateAction<int, ShowSnackbarAction> {
+  CounterStateAction({int initialState = 0}) : super(initialState){
+    // Here you can add the listeners to the state
+    listenState((state){
+        if(state.isEven){
+         emitAction(ShowIsEvenValueSnackbarAction());
+        }else{
+         emitAction(ShowIsOddValueSnackbarAction());
+        }
+    });
+  }
+
+  void increment() => emitState(state + 1);
+  void decrement() => emitState(state - 1);
+}
+
+//... in the UI
+ReActionListener<ShowSnackbarAction>(
+  reState: counterStateAction,
+  onAction: (action) {
+    final snackbarText = switch (action) {
+          ShowIsEvenValueSnackbarAction() => 'The value is even',
+          ShowIsOddValueSnackbarAction() => 'The value is odd',
+          _ => 'The value is null',
+        };
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(snackbarText),
+      ),
+    );
   },
   child: Text('Widget that will not be rebuilt'),
 ),

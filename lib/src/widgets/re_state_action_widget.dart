@@ -6,7 +6,7 @@ import 'package:re_state_action/re_state_action.dart';
 /// When an action is dispatched, the [onAction] callback is called.
 ///
 /// [builder] is called every time the state changes, and it is passed the
-/// current [State] and the [child] widget.
+/// current [S] and the [child] widget.
 ///
 /// [child] is optional and can be used to optimize the number of times the
 /// [builder] is called.
@@ -37,11 +37,11 @@ class ReStateActionWidget<S, A> extends StatelessWidget {
   final ReStateAction<S, A> reState;
 
   /// A function that verifies if the should or not to call the [onAction]
-  /// based on the previous and current [Action].
+  /// based on the previous and current [A].
   final ReActionListenerCondition<A>? listenWhen;
 
   /// A function that verifies if the should or not to rebuild the widget
-  /// based on the previous and current [State].
+  /// based on the previous and current [S].
   final ReStateBuildCondition<S>? buildWhen;
 
   /// The child widget that is passed to the [builder].
