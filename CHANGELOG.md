@@ -1,3 +1,9 @@
+## 0.0.13
+* Updated readme documentation
+* Fixed `ReStateActionWidget` doc
+* Fixed `ReStateWidget` doc
+* Fixed `ReActionListener` doc
+
 ## 0.0.12
 * Refactored `ReStateActionWidget` to remove duplicated code with `ReStateWidget`
 
