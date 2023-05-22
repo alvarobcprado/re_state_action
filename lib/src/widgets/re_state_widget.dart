@@ -6,7 +6,7 @@ import 'package:re_state_action/src/typedefs/re_types.dart';
 /// rebuilds itself when the state changes.
 ///
 /// [builder] is called every time the state changes, and it is passed the
-/// current [State] and the [child] widget.
+/// current [S] and the [child] widget.
 ///
 /// [child] is optional and can be used to optimize the number of times the
 /// [builder] is called.
@@ -30,7 +30,7 @@ class ReStateWidget<S> extends StatefulWidget {
   final ReState<S> reState;
 
   /// A function that verifies if the should or not to call the [builder]
-  /// based on the previous and current [State].
+  /// based on the previous and current [S].
   final ReStateBuildCondition<S>? buildWhen;
 
   /// The child widget that is passed to the [builder].
