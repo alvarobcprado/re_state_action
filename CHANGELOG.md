@@ -1,3 +1,6 @@
+## 1.0.0
+* Bumped version to 1.0.0 stable release
+
 ## 0.0.13
 * Updated readme documentation with Dart 3 example
 * Fixed `ReStateActionWidget` doc
