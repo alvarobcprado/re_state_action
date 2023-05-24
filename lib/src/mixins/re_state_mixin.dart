@@ -49,6 +49,25 @@ mixin ReStateMixin<State> on ReSubscriptionHolder {
     _stateNotifier.add(state);
   }
 
+  @protected
+  Future<void> guardState(
+    FutureOr<State> Function(State lastState) callback, {
+    required FutureOr<State> Function(State lastState, Object? error) onError,
+    State? initialState,
+  }) async {
+    final lastState = state;
+
+    if (initialState != null) {
+      emitState(initialState);
+    }
+
+    try {
+      emitState(await callback(lastState));
+    } catch (error) {
+      emitState(await onError(lastState, error));
+    }
+  }
+
   /// Listens to the state changes.
   ///
   /// [listener] is called whenever a [State] is emitted.
