@@ -18,6 +18,26 @@ class TestState extends ReState<int> {
   void increment() {
     emitState(state + 1);
   }
+
+  void guardIncrement() {
+    guardState(
+      (lastState) => lastState + 3,
+      initialState: 10,
+    );
+  }
+
+  void guardIncrementError() {
+    guardState(
+      (lastState) => throw Exception('error'),
+      onError: (_) => -1,
+    );
+  }
+
+  void guardIncrementIgnoreError() {
+    guardState(
+      (lastState) => throw Exception('error'),
+    );
+  }
 }
 
 class TestStateEvent extends ReStateEvent<int, CounterEvent> {
