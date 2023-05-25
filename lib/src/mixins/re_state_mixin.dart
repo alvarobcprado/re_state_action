@@ -49,10 +49,25 @@ mixin ReStateMixin<State> on ReSubscriptionHolder {
     _stateNotifier.add(state);
   }
 
+  /// Handles the callback that returns a [State] or a [Future] of [State] in
+  /// a safe way and emits the returned state.
+  ///
+  /// If the [callback] returns a [State], then returned value is emitted as the
+  /// new state. It also pass the last state to the callback as an argument.
+  ///
+  /// If the [callback] throws an error, then [onError] is called with the last
+  /// state and the error. The state returned by [onError] is emitted as the new
+  /// state.
+  ///
+  /// If [onError] is not provided, then the error is ignored.
+  ///
+  /// If [initialState] is provided, then the state is set to the [initialState]
+  /// before calling the callback. Usefull when the callback is an async
+  /// function and you want to show a loading state.
   @protected
   Future<void> guardState(
     FutureOr<State> Function(State lastState) callback, {
-    required FutureOr<State> Function(State lastState, Object? error) onError,
+    FutureOr<State> Function(Object? error)? onError,
     State? initialState,
   }) async {
     final lastState = state;
@@ -64,7 +79,9 @@ mixin ReStateMixin<State> on ReSubscriptionHolder {
     try {
       emitState(await callback(lastState));
     } catch (error) {
-      emitState(await onError(lastState, error));
+      if (onError != null) {
+        emitState(await onError(error));
+      }
     }
   }
 
