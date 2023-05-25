@@ -1,3 +1,6 @@
+## 1.0.1
+* Added `guardState` method to `ReState` to allow safe emitting of state changes without try-catch blocks
+
 ## 1.0.0
 * Bumped version to 1.0.0 stable release
 

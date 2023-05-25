@@ -129,7 +129,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.13"
+    version: "1.0.1"
   rxdart:
     dependency: transitive
     description:

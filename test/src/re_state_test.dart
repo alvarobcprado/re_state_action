@@ -92,6 +92,44 @@ void main() {
           expect(() => reState.listenState((state) {}), throwsStateError);
         },
       );
+
+      test(
+        'guardState with initial state resets old state',
+        () async {
+          final reState = TestState(0)..increment();
+          expect(reState.state, 1);
+          reState.guardIncrement();
+          await expectLater(reState.stateStream, emitsInOrder([10, 4]));
+        },
+      );
+
+      test(
+        'guardState with callback emits state of callback',
+        () async {
+          final reState = TestState(0)..guardIncrement();
+          await Future<void>.delayed(Duration.zero);
+          await expectLater(reState.state, 3);
+        },
+      );
+
+      test(
+        'guardState with callback that throws error emits state of onError',
+        () async {
+          final reState = TestState(0)..guardIncrementError();
+          await Future<void>.delayed(Duration.zero);
+          expect(reState.state, -1);
+        },
+      );
+
+      test(
+        'guardState with callback that throws error and has no onError'
+        ' does not emit state',
+        () async {
+          final reState = TestState(0)..guardIncrementIgnoreError();
+          await Future<void>.delayed(Duration.zero);
+          await expectLater(reState.state, 0);
+        },
+      );
     },
   );
 }
