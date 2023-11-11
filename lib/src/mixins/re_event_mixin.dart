@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:re_state_action/re_state_action.dart';
+import 'package:re_state_action/src/utils/re_listener_utils.dart';
 import 'package:re_state_action/src/utils/re_subscription_holder.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -24,19 +25,10 @@ mixin ReEventMixin<Event> on ReSubscriptionHolder {
   /// [callback] is called whenever an event of type [T] is dispatched.
   ///
   /// [modifier] is used to modify the stream of events before it is listened.
-  ///
-  /// [onError] is called whenever an error occurs.
-  ///
-  /// [onDone] is called when the stream is closed.
-  ///
-  /// [cancelOnError] is used to cancel the subscription when an error occurs.
   @protected
   void on<T extends Event>(
     ReEventCallback<T> callback, {
     ReListenerModifier<T>? modifier,
-    Function? onError,
-    void Function()? onDone,
-    bool cancelOnError = false,
   }) {
     if (!_isInitialized) {
       throw StateError(
@@ -62,15 +54,11 @@ mixin ReEventMixin<Event> on ReSubscriptionHolder {
     _eventsMap[type] = callback;
 
     final stream = _eventsNotifier.stream.whereType<T>();
-    final listenerModifier = modifier ?? (stream) => stream;
+    final listenerModifier = modifier ?? reListenerModifier();
+    final listenerMapper = reListenerMapper(callback);
 
     final subscription = subscriptions.add(
-      listenerModifier(stream).listen(
-        callback,
-        onError: onError,
-        onDone: onDone,
-        cancelOnError: cancelOnError,
-      ),
+      listenerModifier(stream, listenerMapper).listen(null),
     );
 
     subscriptions.add(subscription);

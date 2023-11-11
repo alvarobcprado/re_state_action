@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:re_state_action/src/typedefs/re_types.dart';
+import 'package:re_state_action/src/utils/re_listener_utils.dart';
 import 'package:re_state_action/src/utils/re_subscription_holder.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -51,18 +52,10 @@ mixin ReActionMixin<Action> on ReSubscriptionHolder {
   /// [listener] is called whenever an [Action] is emitted.
   ///
   /// [modifier] is used to modify the stream of actions before it is listened to.
-  ///
-  /// [onError] is called whenever an error occurs.
-  ///
-  /// [onDone] is called when the stream is closed.
-  ///
-  /// [cancelOnError] is used to cancel the subscription when an error occurs.
+
   void listenAction(
     ReActionCallback<Action> listener, {
     ReListenerModifier<Action>? modifier,
-    Function? onError,
-    void Function()? onDone,
-    bool cancelOnError = false,
   }) {
     if (!_isInitialized) {
       throw StateError(
@@ -78,15 +71,11 @@ mixin ReActionMixin<Action> on ReSubscriptionHolder {
       );
     }
 
-    final listenerModifier = modifier ?? (listener) => listener;
+    final listenerModifier = modifier ?? reListenerModifier();
+    final listenerMapper = reListenerMapper(listener);
 
     final subscription = subscriptions.add(
-      listenerModifier(actionStream).listen(
-        listener,
-        onError: onError,
-        onDone: onDone,
-        cancelOnError: cancelOnError,
-      ),
+      listenerModifier(actionStream, listenerMapper).listen(null),
     );
     _actionSubscriptions[listener] = subscription;
   }
