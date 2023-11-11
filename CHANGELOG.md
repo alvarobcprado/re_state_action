@@ -1,3 +1,6 @@
+## 1.1.0
+* Updated `ReListenerModifier` approach
+
 ## 1.0.1
 * Added `guardState` method to `ReState` to allow safe emitting of state changes without try-catch blocks
 
