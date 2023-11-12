@@ -98,12 +98,11 @@ class ReCounterStateActionEvent
   ReCounterStateActionEvent() : super(0) {
     on<IncrementCounter>(
       (event) => _increment(),
+      modifier: ReListenerModifiers.throttleTime(const Duration(seconds: 1)),
     );
     on<ResetCounter>(
       (event) => _reset(),
-      modifier: (eventFlow) => eventFlow.debounceTime(
-        const Duration(seconds: 1),
-      ),
+      modifier: ReListenerModifiers.debounceTime(const Duration(seconds: 1)),
     );
 
     listenState(
