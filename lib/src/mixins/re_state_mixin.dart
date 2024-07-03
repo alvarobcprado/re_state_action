@@ -133,6 +133,16 @@ mixin ReStateMixin<State> on ReSubscriptionHolder {
     }
   }
 
+  /// Executes the given sync [callback] if the current state is equal to the
+  /// type [T].
+  @protected
+  void ifStateSync<T extends State>(
+    void Function(T state) callback,
+  ) {
+    if (state is T) {
+      callback(state as T);
+    }
+  }
 
   /// Listens to the state changes.
   ///
