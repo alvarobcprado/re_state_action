@@ -1,3 +1,8 @@
+## 1.2.0
+* Added `guardState` method to `ReState` to allow safe sync emitting of state changes without try-catch blocks
+* Added `ifState` method to `ReState` to allow safe execution of callbacks with expected current states.
+* Added `ifState` method to `ReState` to allow safe sync execution of callbacks with expected current states.
+
 ## 1.1.0
 * Updated `ReListenerModifier` approach
 
