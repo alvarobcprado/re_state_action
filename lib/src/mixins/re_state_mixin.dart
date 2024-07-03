@@ -122,6 +122,17 @@ mixin ReStateMixin<State> on ReSubscriptionHolder {
     }
   }
 
+  /// Executes the given async [callback] if the current state is equal to the
+  /// type [T].
+  @protected
+  Future<void> ifState<T extends State>(
+    FutureOr<void> Function(T state) callback,
+  ) async {
+    if (state is T) {
+      await callback(state as T);
+    }
+  }
+
 
   /// Listens to the state changes.
   ///
