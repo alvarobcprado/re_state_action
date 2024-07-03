@@ -86,6 +86,43 @@ mixin ReStateMixin<State> on ReSubscriptionHolder {
     }
   }
 
+  /// Handles the callback that returns a [State] in a safe way and emits the
+  /// returned state.
+  ///
+  /// If the [callback] returns a [State], then returned value is emitted as the
+  /// new state. It also pass the last state to the callback as an argument.
+  ///
+  /// If the [callback] throws an error, then [onError] is called with the last
+  /// state and the error. The state returned by [onError] is emitted as the new
+  /// state.
+  ///
+  /// If [onError] is not provided, then the error is ignored.
+  ///
+  /// If [initialState] is provided, then the state is set to the [initialState]
+  /// before calling the callback. Usefull when the callback is an async
+  /// function and you want to show a loading state.
+  @protected
+  void guardStateSync(
+    State Function(State lastState) callback, {
+    State Function(Object? error)? onError,
+    State? initialState,
+  }) {
+    final lastState = state;
+
+    if (initialState != null) {
+      emitState(initialState);
+    }
+
+    try {
+      emitState(callback(lastState));
+    } catch (error) {
+      if (onError != null) {
+        emitState(onError(error));
+      }
+    }
+  }
+
+
   /// Listens to the state changes.
   ///
   /// [listener] is called whenever a [State] is emitted.
